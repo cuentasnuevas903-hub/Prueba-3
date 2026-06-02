@@ -1,223 +1,574 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LDC Premium</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#0b0f19,#111827);
-color:white;
-}
-.container{
-max-width:1100px;
-margin:auto;
-padding:30px;
-}
-.hero{
-background:rgba(18,24,38,.85);
-backdrop-filter:blur(12px);
-border:1px solid rgba(70,130,255,.3);
-border-radius:30px;
-padding:45px;
-box-shadow:0 20px 60px rgba(0,0,0,.45);
-text-align:center;
-margin-top:40px;
-}
-.logo{
-font-size:40px;
-font-weight:bold;
-color:#5fa8ff;
-margin-bottom:15px;
-}
-h1{
-font-size:42px;
-margin-bottom:15px;
-}
-.subtitle{
-color:#c5d0e6;
-font-size:18px;
-line-height:1.6;
-max-width:700px;
-margin:auto;
-}
-.small{
-margin-top:18px;
-font-size:13px;
-color:#97a3ba;
-}
-button{
-margin-top:25px;
-background:#2563eb;
-border:none;
-padding:15px 28px;
-border-radius:14px;
-font-size:17px;
-font-weight:bold;
-color:white;
-cursor:pointer;
-transition:.3s;
-}
-button:hover{
-transform:translateY(-2px);
-background:#3b82f6;
-}
-.card{
-display:none;
-background:rgba(18,24,38,.9);
-border:1px solid rgba(70,130,255,.25);
-border-radius:25px;
-padding:30px;
-margin-top:30px;
-box-shadow:0 15px 45px rgba(0,0,0,.35);
-}
-input{
-width:100%;
-padding:14px;
-margin:8px 0;
-border:none;
-border-radius:12px;
-background:#111827;
-color:white;
-border:1px solid #263247;
-}
-.progress{
-height:12px;
-background:#1e293b;
-border-radius:20px;
-overflow:hidden;
-margin:20px 0;
-}
-.bar{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#2563eb,#60a5fa);
-transition:.4s;
-}
-.option{
-padding:14px;
-background:#111827;
-border:1px solid #263247;
-border-radius:14px;
-margin:10px 0;
-cursor:pointer;
-transition:.25s;
-}
-.option:hover{
-border-color:#60a5fa;
-transform:scale(1.01);
-}
-#timer{
-color:#60a5fa;
-margin-bottom:10px;
-font-weight:bold;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LDC Premium - Simulador Vial y Documentación</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-blue: #2563eb;
+            --accent-hover: #3b82f6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .container { width: 100%; max-width: 950px; margin: auto; }
+
+        /* PANTALLA 1: BIENVENIDA */
+        .main-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 28px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .info-col { display: flex; flex-direction: column; justify-content: center; border-right: 1px solid rgba(255, 255, 255, 0.05); padding-right: 25px; }
+        .badge { align-self: flex-start; background: rgba(37, 99, 235, 0.15); color: #60a5fa; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 16px; border-radius: 100px; margin-bottom: 20px; border: 1px solid rgba(37, 99, 235, 0.2); }
+        h1, h2, h3 { font-weight: 700; color: #ffffff; }
+        h1 { font-size: 32px; line-height: 1.2; margin-bottom: 15px; }
+        h2 { font-size: 24px; margin-bottom: 8px; }
+        .subtitle { color: var(--text-muted); font-size: 15px; line-height: 1.6; margin-bottom: 25px; }
+        .format-box { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 15px; margin-bottom: 25px; }
+        .format-title { font-size: 14px; font-weight: 600; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .requirements-list { list-style: none; }
+        .requirements-list li { font-size: 14px; color: #cbd5e1; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
+        .requirements-list li::before { content: "✓"; color: var(--accent-green); font-weight: bold; margin-top: 2px; }
+        .config-col { display: flex; flex-direction: column; justify-content: center; padding-left: 10px; }
+        .config-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+
+        /* CARDS GENERALES */
+        .card { display: none; max-width: 600px; margin: auto; background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 28px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .card-header { margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 15px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select { width: 100%; padding: 14px 16px; border-radius: 12px; background: rgba(15, 23, 42, 0.6); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 15px; transition: all 0.2s ease; }
+        input:focus, select:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        /* OPCIONES DE FORMATO DE EMISIÓN */
+        .emission-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 18px; }
+        .emission-card { border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 23, 42, 0.4); border-radius: 14px; padding: 16px; cursor: pointer; position: relative; transition: all 0.25s ease; display: flex; flex-direction: column; gap: 6px; }
+        .emission-card:hover:not(.disabled) { border-color: rgba(37, 99, 235, 0.5); background: rgba(37, 99, 235, 0.03); }
+        .emission-card input[type="radio"] { position: absolute; top: 14px; right: 14px; width: auto; accent-color: #2563eb; cursor: pointer; }
+        .emission-card.selected { border-color: var(--accent-blue); background: rgba(37, 99, 235, 0.1); box-shadow: 0 0 0 1px var(--accent-blue); }
+        
+        /* ESTADO DESHABILITADO CUANDO SE OBLIGA A USAR DIGITAL */
+        .emission-card.disabled { opacity: 0.4; cursor: not-allowed; background: rgba(15, 23, 42, 0.8); border-color: transparent; }
+        
+        .emission-title { font-size: 14px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 6px; }
+        .emission-price { font-size: 16px; font-weight: 700; color: var(--accent-green); margin-top: 2px; }
+        .emission-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+        /* SECCIONES DINÁMICAS */
+        #delivery-address-group, #vehiculo-data-group { display: none; animation: fadeIn 0.3s ease; }
+        .section-divider { border-top: 1px dashed rgba(255, 255, 255, 0.1); margin: 25px 0 20px 0; padding-top: 15px; }
+        .section-divider h3 { font-size: 15px; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .photo-upload-box { border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 16px; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; background: rgba(15, 23, 42, 0.3); overflow: hidden; }
+        .photo-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .signature-box { border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 23, 42, 0.5); border-radius: 16px; height: 160px; position: relative; }
+        #signature-canvas { width: 100%; height: 100%; cursor: crosshair; display: block; }
+        .clear-sig-btn { position: absolute; bottom: 8px; right: 8px; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; }
+
+        /* LOADER STATUS */
+        .loader-status { font-size: 14px; color: #cbd5e1; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .mini-progress { height: 6px; background: rgba(15, 23, 42, 0.6); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+        .mini-bar { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.8s ease-in-out; }
+
+        /* EXAMEN */
+        .exam-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .timer-badge { background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 15px; border: 1px solid rgba(239,68,68,0.2); }
+        .question-text { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #ffffff; line-height: 1.4; }
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .option-btn { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; color: #cbd5e1; text-align: left; font-size: 15px; cursor: pointer; transition: all 0.2s ease; }
+        .option-btn:hover { background: rgba(37, 99, 235, 0.1); border-color: var(--accent-blue); color: #ffffff; }
+        .option-btn.selected { background: var(--accent-blue); border-color: var(--accent-blue); color: white; font-weight: 500; }
+
+        /* RESUMEN DE PAGO */
+        .payment-box { background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 18px; padding: 22px; text-align: left; margin-bottom: 20px; }
+        .payment-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 14px; }
+        .payment-row:last-child { border-bottom: none; }
+        .whatsapp-alert { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 14px; padding: 18px; color: #a7f3d0; font-size: 14px; line-height: 1.5; text-align: left; margin-bottom: 20px; }
+
+        .btn-principal { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); margin-top: 10px; }
+        .btn-principal:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr; padding: 30px 20px; }
+            .info-col { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-right: 0; padding-bottom: 25px; margin-bottom: 10px; }
+            .config-col { padding-left: 0; }
+            .emission-options { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
 
-<div class="hero" id="home">
-<div class="logo">LDC 🪪</div>
-<h1>Licencia de Conducción – Examen y Práctica en Línea</h1>
-<p class="subtitle">Conocé el proceso de licencia virtual y física, realizá tu práctica teórica y preparate mediante simulación online.</p>
-<p class="small">Solo simulacro.</p>
-<button onclick="openForm()">Sí, quiero realizar el examen</button>
-</div>
+    <!-- PANTALLA 1: BIENVENIDA -->
+    <div class="main-grid" id="home">
+        <div class="info-col">
+            <div class="badge">Simulador y Gestión Federal</div>
+            <h1>Documentación Vial Nacional</h1>
+            <p class="subtitle">Accedé a la plataforma integrada de evaluación y emisión vial. Al aprobar la simulación reglamentaria, podrás tramitar y validar tus credenciales viales.</p>
+            
+            <div class="format-box">
+                <div class="format-title">📱 Modalidades Digitales (App Mi Argentina):</div>
+                <ul class="requirements-list" style="margin-bottom: 10px;">
+                    <li><strong>Licencia Digital ($75.000):</strong> Sincronización e impacto inmediato de conducir.</li>
+                    <li><strong>Cédula Automotor / Moto Digital ($75.000):</strong> Emisión digital única disponible para circular.</li>
+                </ul>
+                <div class="format-title" style="color: #cbd5e1; margin-top: 15px;">💳 Modalidad Física (Únicamente Licencia):</div>
+                <ul class="requirements-list">
+                    <li><strong>Carnet Tradicional PVC ($135.000):</strong> Impresión física en plástico de alta seguridad con despacho postal al domicilio declarado.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="config-col">
+            <h3 class="config-title">Configurá tu examen</h3>
+            <div class="form-group">
+                <label for="jurisdiccion">Jurisdicción / Provincia</label>
+                <select id="jurisdiccion">
+                    <option value="Buenos Aires">Buenos Aires</option>
+                    <option value="Córdoba">Córdoba</option>
+                    <option value="Santa Fe">Santa Fe</option>
+                    <option value="Mendoza">Mendoza</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="clase">Clase de Licencia de Referencia</label>
+                <select id="clase">
+                    <option value="A">Clase A (Motos)</option>
+                    <option value="B" selected>Clase B (Automóviles)</option>
+                </select>
+            </div>
+            <button class="btn-principal" onclick="irAlRegistro()">Continuar al Registro</button>
+        </div>
+    </div>
 
-<div class="card" id="form">
-<h2>Registro</h2><br>
-<input placeholder="Nombre y apellido">
-<input placeholder="DNI">
-<input type="date">
-<input placeholder="Domicilio">
-<input placeholder="Ciudad / Provincia">
-<input placeholder="Teléfono">
-<input placeholder="Email">
-<button onclick="startExam()">Comenzar examen</button>
-</div>
+    <!-- PANTALLA 2: REGISTRO + BIOMETRÍA -->
+    <div class="card" id="form">
+        <div class="card-header">
+            <h2>Creación de Legajo de Documentación</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">Completá los datos filiatorios obligatorios para la sincronización o envío postal.</p>
+        </div>
 
-<div class="card" id="exam">
-<h2>Simulacro Teórico</h2>
-<div class="progress"><div class="bar" id="bar"></div></div>
-<p id="timer">Tiempo restante: 90</p>
-<h3 id="question"></h3>
-<div id="answers"></div>
-</div>
+        <form id="regForm" onsubmit="event.preventDefault(); procesarLegajo();">
+            
+            <div class="form-group">
+                <label for="tipo-tramite-select">Seleccione el Trámite a realizar</label>
+                <select id="tipo-tramite-select" onchange="actualizarPreciosYFormatos()">
+                    <option value="licencia">Solo Licencia de Conducir ($75.000)</option>
+                    <option value="cedula" selected>Solo Cédula Digital (Verde / Azul) ($75.000)</option>
+                    <option value="ambas">Ambas Documentaciones (Licencia + Cédula) ($150.000)</option>
+                </select>
+            </div>
 
-<div class="card" id="result">
-<h2>Resultado Final</h2><br>
-<p id="score"></p>
-<button onclick="location.reload()">Realizar nuevamente</button>
-</div>
+            <div class="form-group">
+                <label>Formato de Expedición Disponible</label>
+                <div class="emission-options">
+                    <div class="emission-card selected" id="opt-virtual" onclick="selectEmission('virtual')">
+                        <div class="emission-title">📱 Digital App</div>
+                        <div class="emission-price" id="precio-digital">$75.000</div>
+                        <div class="emission-desc">Sincronización directa en Mi Argentina en 24 horas hábiles.</div>
+                        <input type="radio" name="formato_emision" value="virtual" checked>
+                    </div>
+                    <div class="emission-card" id="opt-fisico" onclick="selectEmission('fisico')">
+                        <div class="emission-title">💳 Carnet Físico</div>
+                        <div class="emission-price">$135.000</div>
+                        <div class="emission-desc" id="desc-fisico">Impresión en PVC premium y despacho postal prioritario.</div>
+                        <input type="radio" name="formato_emision" value="fisico">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Nombre y Apellido del Titular</label>
+                <input type="text" id="input-nombre" placeholder="Ej: Juan Pérez" required>
+            </div>
+            <div class="form-group">
+                <label>Documento Nacional de Identidad (DNI)</label>
+                <input type="text" id="input-dni" placeholder="Ej: 42333444" required>
+            </div>
+            <div class="form-group">
+                <label>Correo Electrónico (Gmail de Notificación)</label>
+                <input type="email" id="input-email" placeholder="Ej: tuusuario@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label>Fecha de Nacimiento</label>
+                <input type="date" required>
+            </div>
+
+            <!-- SECCIÓN DINÁMICA: DATOS DEL VEHÍCULO -->
+            <div id="vehiculo-data-group">
+                <div class="section-divider">
+                    <h3>Datos del Vehículo (Asociación de Cédula)</h3>
+                </div>
+                <div class="form-group">
+                    <label for="tipo-vehiculo">Tipo de Vehículo</label>
+                    <select id="tipo-vehiculo">
+                        <option value="Auto">Automóvil</option>
+                        <option value="Moto">Motovehículo</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="input-patente">Dominio / Patente</label>
+                        <input type="text" id="input-patente" placeholder="Ej: AA123BB">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-anio">Año / Modelo</label>
+                        <input type="number" id="input-anio" placeholder="Ej: 2024" min="1980" max="2027">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input-modelo">Marca y Modelo Completo</label>
+                    <input type="text" id="input-modelo" placeholder="Ej: Honda Wave 110 / Fiat Cronos">
+                </div>
+            </div>
+
+            <div class="form-group" id="delivery-address-group">
+                <label>Dirección Completa de Envío Postal</label>
+                <input type="text" id="input-direccion-envio" placeholder="Ej: Av. Colón 1200, Córdoba">
+            </div>
+
+            <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-top:20px;">
+                <div>
+                    <label>Foto de Rostro</label>
+                    <div class="photo-upload-box" onclick="document.getElementById('file-input').click()">
+                        <span id="upload-placeholder" style="font-size: 13px; color: var(--text-muted); ">📸 Cargar foto</span>
+                        <img id="photo-preview" class="photo-preview" src="">
+                        <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                    </div>
+                </div>
+                <div>
+                    <label>Firma del Titular</label>
+                    <div class="signature-box">
+                        <canvas id="signature-canvas"></canvas>
+                        <button type="button" class="clear-sig-btn" onclick="clearSignature()">Borrar</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-principal" style="margin-top:25px;">Confirmar Datos y Confeccionar Legajo</button>
+        </form>
+    </div>
+
+    <!-- PANTALLA 3: ANIMACIÓN LOADER -->
+    <div class="card" id="loading-screen" style="max-width: 500px; text-align: center;">
+        <div style="font-size: 40px; margin-bottom: 15px; animation: pulse 1.5s infinite;">⚙️</div>
+        <div class="card-header" style="border:none; margin-bottom:30px;">
+            <h2>Procesando Solicitud</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 5px;" id="tramite-id">Generando Legajo Único Digital...</p>
+        </div>
+        <div>
+            <div class="loader-status"><span>1. Verificación de Identidad Nacional</span><span id="st-1">Esperando...</span></div>
+            <div class="mini-progress"><div class="mini-bar" id="bar-1"></div></div>
+            <div class="loader-status"><span>2. Procesamiento Biométrico y Vehicular</span><span id="st-2">Esperando...</span></div>
+            <div class="mini-progress"><div class="mini-bar" id="bar-2"></div></div>
+            <div class="loader-status"><span>3. Habilitación de Mesa de Examen</span><span id="st-3">Esperando...</span></div>
+            <div class="mini-progress"><div class="mini-bar" id="bar-3"></div></div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 4: EXAMEN TEÓRICO -->
+    <div class="card" id="exam-screen" style="max-width: 600px;">
+        <div class="exam-header">
+            <div>
+                <h2 style="font-size:20px;">Examen Teórico Digital</h2>
+                <p id="question-counter" style="color:var(--text-muted); font-size:13px; margin-top:2px;">Pregunta 1 de 4</p>
+            </div>
+            <div class="timer-badge" id="timer-display">01:30</div>
+        </div>
+        <div id="quiz-container">
+            <p class="question-text" id="question-text">Cargando pregunta...</p>
+            <div class="options-list" id="options-container"></div>
+        </div>
+        <button class="btn-principal" id="next-btn" onclick="nextQuestion()" disabled>Responder y Continuar</button>
+    </div>
+
+    <!-- PANTALLA 5: RESUMEN DE PAGO -->
+    <div class="card" id="payment-screen" style="max-width: 550px; text-align: center;">
+        <div style="font-size: 44px; margin-bottom: 10px;">📄</div>
+        <div class="card-header" style="padding-bottom: 10px;">
+            <h2>Legajo Homologado Exitosamente</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;" id="summary-tramite-id">Trámite N°:</p>
+        </div>
+
+        <div class="payment-box">
+            <div class="payment-row"><strong>Postulante:</strong> <span id="summary-nombre">-</span></div>
+            <div class="payment-row"><strong>Documento:</strong> <span id="summary-dni">-</span></div>
+            <div class="payment-row"><strong>E-mail de Notificación:</strong> <span id="summary-email" style="color:#3b82f6;">-</span></div>
+            <div class="payment-row"><strong>Resultado Examen:</strong> <span style="color:var(--accent-green); font-weight:600;">APROBADO (100%)</span></div>
+            <div class="payment-row"><strong>Formato Solicitado:</strong> <span id="summary-formato">-</span></div>
+            <div class="payment-row" id="row-vehiculo" style="display:none;"><strong>Vehículo Vinculado:</strong> <span id="summary-vehiculo">-</span></div>
+            <div class="payment-row" id="row-delivery" style="display:none;"><strong>Destino Postal:</strong> <span id="summary-direccion">-</span></div>
+            <div class="payment-row"><strong>Plazo de Entrega:</strong> <span id="summary-plazo">-</span></div>
+            <div class="payment-row" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; font-size: 16px;">
+                <strong>Total Neto a Liquidar:</strong> <span id="summary-total" style="color:var(--accent-green); font-weight:700;">-</span>
+            </div>
+        </div>
+
+        <div class="whatsapp-alert">
+            🟢 <strong>Instrucciones para la habilitación:</strong><br><br>
+            1. Realice la transferencia por el total indicado a la siguiente cuenta:<br>
+            • <strong>Titular:</strong> Roxana Jiménez<br>
+            • <strong>Alias:</strong> <span style="color: #ffffff; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: bold;">RJIMENEZ33.COCOS</span><br><br>
+            2. Una vez hecho el pago, <strong>envíe el comprobante vía WhatsApp al número <span style="font-weight: 700; color: #ffffff;">11-2592-2448</span></strong>.<br><br>
+            📌 <em>Las credenciales digitales impactarán directamente en su app Mi Argentina, o se emitirá la guía postal si eligió carnet físico.</em>
+        </div>
+
+        <button class="btn-principal" onclick="finalizarTodo()">Finalizar y Enviar Comprobante</button>
+    </div>
 
 </div>
 
 <script>
-const questions=[
-{q:"¿Qué indica la luz roja del semáforo?",a:["Detenerse","Avanzar","Precaución"],c:0},
-{q:"¿Es obligatorio el cinturón de seguridad?",a:["No","Sí","Solo en ruta"],c:1},
-{q:"¿Se puede usar el celular conduciendo?",a:["Sí","No","Solo detenido"],c:1},
-{q:"¿Qué debe hacer ante una señal de STOP?",a:["Acelerar","Detenerse completamente","Seguir"],c:1}
-];
+    let jurisdiccionSeleccionada = "";
+    let tipoEmision = "virtual"; 
+    
+    let currentQuestionIndex = 0;
+    let selectedAnswerIndex = null;
+    let score = 0;
+    let timerInterval = null;
+    let timeLeft = 90;
 
-let current=0;
-let score=0;
-let time=90;
+    const bancoPreguntas = [
+        { q: "¿Qué indica una línea continua amarilla doble en el centro de la calzada?", options: ["Permitido adelantar", "Prohibición absoluta de sobrepaso", "Estacionamiento exclusivo"], correct: 1 },
+        { q: "¿Cuál es la velocidad máxima permitida en avenidas urbanas, salvo señalización en contrario?", options: ["40 km/h", "60 km/h", "80 km/h"], correct: 1 },
+        { q: "Ante la presencia de una señal de 'PARE', ¿qué debe hacer el conductor?", options: ["Disminuir la velocidad y pasar despacio", "Detener la marcha por completo de forma obligatoria", "Tocar bocina y avanzar"], correct: 1 },
+        { q: "¿Quién tiene la prioridad de paso absoluta en una rotonda?", options: ["El vehículo que circula por dentro de la rotonda", "El vehículo que intenta ingresar", "El vehículo de mayor porte"], correct: 0 }
+    ];
 
-function openForm(){
-document.getElementById('home').style.display='none';
-document.getElementById('form').style.display='block';
-}
+    function irAlRegistro() {
+        jurisdiccionSeleccionada = document.getElementById('jurisdiccion').value;
+        document.getElementById('home').style.display = 'none';
+        document.getElementById('form').style.display = 'block';
+        initSignaturePad();
+        actualizarPreciosYFormatos();
+    }
 
-function startExam(){
-document.getElementById('form').style.display='none';
-document.getElementById('exam').style.display='block';
-loadQuestion();
-timerStart();
-}
+    function actualizarPreciosYFormatos() {
+        const tipoTramite = document.getElementById('tipo-tramite-select').value;
+        const cardFisico = document.getElementById('opt-fisico');
+        const cardVirtual = document.getElementById('opt-virtual');
+        const vehiculoGroup = document.getElementById('vehiculo-data-group');
+        const txtPrecioDigital = document.getElementById('precio-digital');
+        
+        const pat = document.getElementById('input-patente');
+        const anio = document.getElementById('input-anio');
+        const mod = document.getElementById('input-modelo');
 
-function loadQuestion(){
-let q=questions[current];
-document.getElementById('question').innerText=q.q;
-document.getElementById('bar').style.width=((current/questions.length)*100)+'%';
-let html='';
-q.a.forEach((op,i)=>{
-html+=`<div class="option" onclick="answer(${i})">${op}</div>`;
-});
-document.getElementById('answers').innerHTML=html;
-}
+        if (tipoTramite === 'licencia') {
+            cardFisico.classList.remove('disabled');
+            txtPrecioDigital.innerText = "$75.000";
+            vehiculoGroup.style.display = 'none';
+            desmarcarAtributosVehiculo();
+        } else {
+            selectEmission('virtual');
+            cardFisico.classList.add('disabled');
+            
+            if (tipoTramite === 'cedula') {
+                txtPrecioDigital.innerText = "$75.000";
+            } else if (tipoTramite === 'ambas') {
+                txtPrecioDigital.innerText = "$150.000";
+            }
 
-function answer(i){
-if(i===questions[current].c)score++;
-current++;
-if(current>=questions.length){
-finish();
-}else{
-loadQuestion();
-}
-}
+            vehiculoGroup.style.display = 'block';
+            pat.setAttribute('required', 'true');
+            anio.setAttribute('required', 'true');
+            mod.setAttribute('required', 'true');
+        }
+    }
 
-function finish(){
-document.getElementById('exam').style.display='none';
-document.getElementById('result').style.display='block';
-document.getElementById('score').innerHTML='Obtuviste '+score+' respuestas correctas de '+questions.length+'.';
-}
+    function selectEmission(type) {
+        const tipoTramite = document.getElementById('tipo-tramite-select').value;
+        if(type === 'fisico' && tipoTramite !== 'licencia') return;
 
-function timerStart(){
-let t=setInterval(()=>{
-time--;
-document.getElementById('timer').innerText='Tiempo restante: '+time+' segundos';
-if(time<=0){
-clearInterval(t);
-finish();
-}
-},1000);
-}
+        tipoEmision = type;
+        const cardVirtual = document.getElementById('opt-virtual');
+        const cardFisico = document.getElementById('opt-fisico');
+        const addressGroup = document.getElementById('delivery-address-group');
+        const addressInput = document.getElementById('input-direccion-envio');
+
+        if(type === 'virtual') {
+            cardVirtual.classList.add('selected');
+            cardFisico.classList.remove('selected');
+            cardVirtual.querySelector('input[type="radio"]').checked = true;
+            addressGroup.style.display = 'none';
+            addressInput.removeAttribute('required');
+        } else {
+            cardFisico.classList.add('selected');
+            cardVirtual.classList.remove('selected');
+            cardFisico.querySelector('input[type="radio"]').checked = true;
+            addressGroup.style.display = 'block';
+            addressInput.setAttribute('required', 'true');
+        }
+    }
+
+    function desmarcarAtributosVehiculo() {
+        document.getElementById('input-patente').removeAttribute('required');
+        document.getElementById('input-anio').removeAttribute('required');
+        document.getElementById('input-modelo').removeAttribute('required');
+    }
+
+    function previewImage(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('photo-preview').src = e.target.result;
+                document.getElementById('photo-preview').style.display = 'block';
+                document.getElementById('upload-placeholder').style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    let canvas, ctx, drawing = false;
+    function initSignaturePad() {
+        canvas = document.getElementById('signature-canvas');
+        ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+        canvas.addEventListener('mousedown', (e) => { drawing = true; draw(e); });
+        canvas.addEventListener('mousemove', draw);
+        window.addEventListener('mouseup', () => drawing = false);
+        canvas.addEventListener('touchstart', (e) => { drawing = true; draw(e); e.preventDefault(); });
+        canvas.addEventListener('touchmove', (e) => { draw(e); e.preventDefault(); });
+    }
+
+    function draw(e) {
+        if (!drawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const x = clientX - rect.left; const y = clientY - rect.top;
+        if(e.type === 'mousedown' || e.type === 'touchstart') { ctx.beginPath(); ctx.moveTo(x, y); } 
+        else { ctx.lineTo(x, y); ctx.stroke(); }
+    }
+    function clearSignature() { if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+    function procesarLegajo() {
+        const dni = document.getElementById('input-dni').value;
+        const nombre = document.getElementById('input-nombre').value;
+        const email = document.getElementById('input-email').value;
+        const tipoTramite = document.getElementById('tipo-tramite-select').value;
+        
+        const nroTramite = Math.floor(100000 + Math.random() * 900000);
+        const numeroCompleto = `AR-${dni}-${nroTramite}`;
+
+        document.getElementById('summary-nombre').innerText = nombre;
+        document.getElementById('summary-dni').innerText = dni;
+        document.getElementById('summary-email').innerText = email;
+        document.getElementById('summary-tramite-id').innerText = `Trámite N°: ${numeroCompleto}`;
+        document.getElementById('tramite-id').innerText = `Trámite N°: ${numeroCompleto}`;
+
+        if (tipoEmision === 'virtual') {
+            if (tipoTramite === 'licencia') {
+                document.getElementById('summary-formato').innerText = "Licencia Digital (App Mi Argentina)";
+                document.getElementById('summary-total').innerText = "$75.000";
+                document.getElementById('row-vehiculo').style.display = 'none';
+            } else {
+                const tipoV = document.getElementById('tipo-vehiculo').value;
+                const patV = document.getElementById('input-patente').value.toUpperCase();
+                const modV = document.getElementById('input-modelo').value;
+                
+                document.getElementById('summary-vehiculo').innerText = `${tipoV} - ${modV} [Patente: ${patV}]`;
+                document.getElementById('row-vehiculo').style.display = 'flex';
+
+                if (tipoTramite === 'cedula') {
+                    document.getElementById('summary-formato').innerText = "Cédula Automotor/Moto Digital (App Mi Argentina)";
+                    document.getElementById('summary-total').innerText = "$75.000";
+                } else {
+                    document.getElementById('summary-formato').innerText = "Licencia Digital + Cédula Digital (App Mi Argentina)";
+                    document.getElementById('summary-total').innerText = "$150.000";
+                }
+            }
+            document.getElementById('summary-plazo').innerText = "Impacto en Mi Argentina en 24hs hábiles";
+            document.getElementById('row-delivery').style.display = 'none';
+        } else {
+            const direccionEnvio = document.getElementById('input-direccion-envio').value;
+            document.getElementById('summary-formato').innerText = "Licencia de Conducir - Carnet Físico PVC";
+            document.getElementById('summary-plazo').innerText = "Despacho postal prioritario (3 a 5 días hábiles)";
+            document.getElementById('summary-total').innerText = "$135.000";
+            document.getElementById('summary-direccion').innerText = direccionEnvio;
+            document.getElementById('row-delivery').style.display = 'flex';
+            document.getElementById('row-vehiculo').style.display = 'none';
+        }
+
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('loading-screen').style.display = 'block';
+
+        setTimeout(() => { document.getElementById('bar-1').style.width = '100%'; document.getElementById('st-1').innerText = '✅ Verificado'; document.getElementById('st-1').style.color = '#10b981'; }, 500);
+        setTimeout(() => { document.getElementById('bar-2').style.width = '100%'; document.getElementById('st-2').innerText = '✅ Procesado'; document.getElementById('st-2').style.color = '#10b981'; }, 1200);
+        setTimeout(() => { document.getElementById('bar-3').style.width = '100%'; document.getElementById('st-3').innerText = '✅ Habilitado'; document.getElementById('st-3').style.color = '#10b981'; }, 1900);
+
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+            startExam();
+        }, 2800);
+    }
+
+    function startExam() {
+        document.getElementById('exam-screen').style.display = 'block';
+        currentQuestionIndex = 0; score = 0; timeLeft = 90;
+        loadQuestion(); startTimer();
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            let mins = Math.floor(timeLeft / 60); let secs = timeLeft % 60;
+            document.getElementById('timer-display').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if(timeLeft <= 0) { clearInterval(timerInterval); evaluarResultadoExamen(); }
+        }, 1000);
+    }
+
+    function loadQuestion() {
+        selectedAnswerIndex = null;
+        document.getElementById('next-btn').disabled = true;
+        document.getElementById('question-counter').innerText = `Pregunta ${currentQuestionIndex + 1} de ${bancoPreguntas.length}`;
+        const currentQuestion = bancoPreguntas[currentQuestionIndex];
+        document.getElementById('question-text').innerText = currentQuestion.q;
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = "";
+        currentQuestion.options.forEach((option, idx) => {
+            const btn = document.createElement('button'); btn.className = "option-btn"; btn.innerText = option;
+            btn.onclick = () => selectOption(idx, btn); optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(idx, element) {
+        selectedAnswerIndex = idx;
+        document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+        element.classList.add('selected');
+        document.getElementById('next-btn').disabled = false;
+    }
+
+    function nextQuestion() {
+        if(selectedAnswerIndex === bancoPreguntas[currentQuestionIndex].correct) score++;
+        currentQuestionIndex++;
+        if(currentQuestionIndex < bancoPreguntas.length) loadQuestion();
+        else { clearInterval(timerInterval); evaluarResultadoExamen(); }
+    }
+
+    function evaluarResultadoExamen() {
+        const porcentaje = (score / bancoPreguntas.length) * 100;
+        document.getElementById('exam-screen').style.display = 'none';
+        if(porcentaje >= 75) document.getElementById('payment-screen').style.display = 'block';
+        else { alert("Examen no superado. Reintentando..."); startExam(); }
+    }
+
+    function finalizarTodo() {
+        alert("Redirigiendo a canales de validación de comprobantes.");
+    }
 </script>
-
 </body>
 </html>
