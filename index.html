@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDC Premium</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#0b0f19,#111827);
+color:white;
+}
+.container{
+max-width:1100px;
+margin:auto;
+padding:30px;
+}
+.hero{
+background:rgba(18,24,38,.85);
+backdrop-filter:blur(12px);
+border:1px solid rgba(70,130,255,.3);
+border-radius:30px;
+padding:45px;
+box-shadow:0 20px 60px rgba(0,0,0,.45);
+text-align:center;
+margin-top:40px;
+}
+.logo{
+font-size:40px;
+font-weight:bold;
+color:#5fa8ff;
+margin-bottom:15px;
+}
+h1{
+font-size:42px;
+margin-bottom:15px;
+}
+.subtitle{
+color:#c5d0e6;
+font-size:18px;
+line-height:1.6;
+max-width:700px;
+margin:auto;
+}
+.small{
+margin-top:18px;
+font-size:13px;
+color:#97a3ba;
+}
+button{
+margin-top:25px;
+background:#2563eb;
+border:none;
+padding:15px 28px;
+border-radius:14px;
+font-size:17px;
+font-weight:bold;
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+button:hover{
+transform:translateY(-2px);
+background:#3b82f6;
+}
+.card{
+display:none;
+background:rgba(18,24,38,.9);
+border:1px solid rgba(70,130,255,.25);
+border-radius:25px;
+padding:30px;
+margin-top:30px;
+box-shadow:0 15px 45px rgba(0,0,0,.35);
+}
+input{
+width:100%;
+padding:14px;
+margin:8px 0;
+border:none;
+border-radius:12px;
+background:#111827;
+color:white;
+border:1px solid #263247;
+}
+.progress{
+height:12px;
+background:#1e293b;
+border-radius:20px;
+overflow:hidden;
+margin:20px 0;
+}
+.bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#2563eb,#60a5fa);
+transition:.4s;
+}
+.option{
+padding:14px;
+background:#111827;
+border:1px solid #263247;
+border-radius:14px;
+margin:10px 0;
+cursor:pointer;
+transition:.25s;
+}
+.option:hover{
+border-color:#60a5fa;
+transform:scale(1.01);
+}
+#timer{
+color:#60a5fa;
+margin-bottom:10px;
+font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="hero" id="home">
+<div class="logo">LDC 🪪</div>
+<h1>Licencia de Conducción – Examen y Práctica en Línea</h1>
+<p class="subtitle">Conocé el proceso de licencia virtual y física, realizá tu práctica teórica y preparate mediante simulación online.</p>
+<p class="small">Solo simulacro.</p>
+<button onclick="openForm()">Sí, quiero realizar el examen</button>
+</div>
+
+<div class="card" id="form">
+<h2>Registro</h2><br>
+<input placeholder="Nombre y apellido">
+<input placeholder="DNI">
+<input type="date">
+<input placeholder="Domicilio">
+<input placeholder="Ciudad / Provincia">
+<input placeholder="Teléfono">
+<input placeholder="Email">
+<button onclick="startExam()">Comenzar examen</button>
+</div>
+
+<div class="card" id="exam">
+<h2>Simulacro Teórico</h2>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<p id="timer">Tiempo restante: 90</p>
+<h3 id="question"></h3>
+<div id="answers"></div>
+</div>
+
+<div class="card" id="result">
+<h2>Resultado Final</h2><br>
+<p id="score"></p>
+<button onclick="location.reload()">Realizar nuevamente</button>
+</div>
+
+</div>
+
+<script>
+const questions=[
+{q:"¿Qué indica la luz roja del semáforo?",a:["Detenerse","Avanzar","Precaución"],c:0},
+{q:"¿Es obligatorio el cinturón de seguridad?",a:["No","Sí","Solo en ruta"],c:1},
+{q:"¿Se puede usar el celular conduciendo?",a:["Sí","No","Solo detenido"],c:1},
+{q:"¿Qué debe hacer ante una señal de STOP?",a:["Acelerar","Detenerse completamente","Seguir"],c:1}
+];
+
+let current=0;
+let score=0;
+let time=90;
+
+function openForm(){
+document.getElementById('home').style.display='none';
+document.getElementById('form').style.display='block';
+}
+
+function startExam(){
+document.getElementById('form').style.display='none';
+document.getElementById('exam').style.display='block';
+loadQuestion();
+timerStart();
+}
+
+function loadQuestion(){
+let q=questions[current];
+document.getElementById('question').innerText=q.q;
+document.getElementById('bar').style.width=((current/questions.length)*100)+'%';
+let html='';
+q.a.forEach((op,i)=>{
+html+=`<div class="option" onclick="answer(${i})">${op}</div>`;
+});
+document.getElementById('answers').innerHTML=html;
+}
+
+function answer(i){
+if(i===questions[current].c)score++;
+current++;
+if(current>=questions.length){
+finish();
+}else{
+loadQuestion();
+}
+}
+
+function finish(){
+document.getElementById('exam').style.display='none';
+document.getElementById('result').style.display='block';
+document.getElementById('score').innerHTML='Obtuviste '+score+' respuestas correctas de '+questions.length+'.';
+}
+
+function timerStart(){
+let t=setInterval(()=>{
+time--;
+document.getElementById('timer').innerText='Tiempo restante: '+time+' segundos';
+if(time<=0){
+clearInterval(t);
+finish();
+}
+},1000);
+}
+</script>
+
+</body>
+</html>
